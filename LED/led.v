@@ -1,20 +1,20 @@
-`timescale 1ns/1ps
+`timescale 1ns/1ns
 /*
     author : lbw
 */
 module led(
     input   [3:0] num,
-    output  CA,
-    output  CB,
-    output  CC,
-    output  CD,
-    output  CE,
-    output  CF,
-    output  CG,
-    output  DP
+    output reg  CA,
+    output reg  CB,
+    output reg  CC,
+    output reg  CD,
+    output reg  CE,
+    output reg  CF,
+    output reg  CG,
+    output reg DP
 );
-
     always @(*) begin
+        DP = 0;
         case (num)
             4'd0: 
                 begin
@@ -41,7 +41,7 @@ module led(
                     CA = 1;
                     CB = 1;
                     CC = 0;
-                    CD = 1;
+                    CD= 1;
                     CE = 1;
                     CF = 0;
                     CG = 1;
@@ -64,7 +64,7 @@ module led(
                     CD = 1;
                     CE = 0;
                     CF = 1;
-                    CF = 1;
+                    CG = 1;
                 end
             4'd5: 
                 begin
@@ -118,7 +118,5 @@ module led(
                 end
         endcase
     end
-    
-    assign DP = 0;
 
 endmodule
