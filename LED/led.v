@@ -11,7 +11,7 @@ module led(
     output  CE,
     output  CF,
     output  CG,
-    output  DP,
+    output  DP
 );
 
     always @(*) begin

@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 module binary_to_demical (
     input wire [31:0] binary_num,
-    output reg [3:0] decimal_digits[0:7]
+    output reg [3:0] demical_digits[0:7]
 );
 
     reg [31:0] quotient;
@@ -14,7 +14,7 @@ module binary_to_demical (
         
         for (i = 0; i < 8; i = i + 1) begin
             digit = quotient % 10;
-            decimal_digits[i] = digit;
+            demical_digits[i] = digit;
             quotient = quotient / 10;
         end
     end
