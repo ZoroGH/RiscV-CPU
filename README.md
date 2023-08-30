@@ -3,13 +3,38 @@ This repo is for little term, the goal is to develop a risc-v based cpu with pip
 
 ## Update Log
 - ZoroGH, Init
+- LBW, update instructions & jmp, 20230830
+
+## Instructions
+
+- add
+- sub
+- addi
+- mul
+- mulh
+- beq
+- bne
+- blt
+- bge
+- jal
+- sw
+- lw
+- xor
+- and
+- or
+- lui
+- auipc
+
+
+
 ## Module interface definition
 Fetch
 ```verilog
 input clk,
 input rst,
 input clr,
-input jmp,
+input jmp_en,
+input jmp_addr,
 // ouptut 
 output [31:0] ins
 ```
@@ -26,7 +51,6 @@ output rs2,
 output rd,
 output offset,
 output immediate
-
 ```
 
 
@@ -54,6 +78,9 @@ output [31:0] addr,
 input  [31:0] data,
 output [31:0] write_data,
 output write_read,
+
+output jmp_en,
+output jmp_addr,
 
 output res,// result
 output clr
