@@ -1,11 +1,5 @@
 `timescale 1ns / 1ps
 
-// ¨€¨€¨€¨€¨€¨€¨€¨[ ¨€¨€¨€¨€¨€¨€¨[ ¨€¨€¨€¨€¨€¨€¨[  ¨€¨€¨€¨€¨€¨€¨[  ¨€¨€¨€¨€¨€¨€¨[ ¨€¨€¨[  ¨€¨€¨[
-// ¨^¨T¨T¨€¨€¨€¨X¨a¨€¨€¨X¨T¨T¨T¨€¨€¨[¨€¨€¨X¨T¨T¨€¨€¨[¨€¨€¨X¨T¨T¨T¨€¨€¨[¨€¨€¨X¨T¨T¨T¨T¨a ¨€¨€¨U  ¨€¨€¨U
-//   ¨€¨€¨€¨X¨a ¨€¨€¨U   ¨€¨€¨U¨€¨€¨€¨€¨€¨€¨X¨a¨€¨€¨U   ¨€¨€¨U¨€¨€¨U  ¨€¨€¨€¨[¨€¨€¨€¨€¨€¨€¨€¨U
-//  ¨€¨€¨€¨X¨a  ¨€¨€¨U   ¨€¨€¨U¨€¨€¨X¨T¨T¨€¨€¨[¨€¨€¨U   ¨€¨€¨U¨€¨€¨U   ¨€¨€¨U¨€¨€¨X¨T¨T¨€¨€¨U
-// ¨€¨€¨€¨€¨€¨€¨€¨[¨^¨€¨€¨€¨€¨€¨€¨X¨a¨€¨€¨U  ¨€¨€¨U¨^¨€¨€¨€¨€¨€¨€¨X¨a¨^¨€¨€¨€¨€¨€¨€¨X¨a¨€¨€¨U  ¨€¨€¨U
-// ¨^¨T¨T¨T¨T¨T¨T¨a ¨^¨T¨T¨T¨T¨T¨a ¨^¨T¨a  ¨^¨T¨a ¨^¨T¨T¨T¨T¨T¨a  ¨^¨T¨T¨T¨T¨T¨a ¨^¨T¨a  ¨^¨T¨a
 `include "instruction.vh"
 
 module decoder (
@@ -137,66 +131,66 @@ module decoder (
                 rs1       = instruction[19:15];
                 rs2       = instruction[24:20];
                 rd        = instruction[11:7];
-                offset    = 'd0;
-                immediate = 'd0;
+                offset    = 32'd0;
+                immediate = 32'd0;
             end
             `I_ADDI: begin
                 rs1       = instruction[19:15];
-                rs2       = 'd0;
+                rs2       = 5'd0;
                 rd        = instruction[11:7];
-                offset    = 'd0;
+                offset    = 32'd0;
                 immediate = {{20{instruction[31]}}, instruction[31:20]};  // 20bit+12bit
             end
             `I_BEQ, `I_BNE, `I_BLT, `I_BGE: begin
                 rs1       = instruction[19:15];
                 rs2       = instruction[24:20];
-                rd        = 'd0;
+                rd        = 5'd0;
                 //          ext sign                 12                 11              10 - 5              4 - 1
                 // offset    = {{20{instruction[31]}},instruction[31], instruction[7], instruction[30:25], instruction[11:8]};
                 offset    = {{19{instruction[31]}},instruction[31], instruction[7], instruction[30:25], instruction[11:8],1'b0};
-                immediate = 'd0;
+                immediate = 32'd0;
             end
             `I_LW: begin
                 rs1       = instruction[19:15];
-                rs2       = 'd0;
+                rs2       = 5'd0;
                 rd        = instruction[11:7];
                 offset    = instruction[31:20];
-                immediate = 'd0;
+                immediate = 32'd0;
             end
             `I_SW: begin
                 rs1       = instruction[19:15];
                 rs2       = instruction[24:20];
-                rd        = 'd0;
+                rd        = 5'd0;
                 offset    = {instruction[31:25], instruction[11:7]};
-                immediate = 'd0;
+                immediate = 32'd0;
             end
             `I_JAL: begin
-                rs1       = 'd0;
-                rs2       = 'd0;
+                rs1       = 5'd0;
+                rs2       = 5'd0;
                 rd        = instruction[11:7];
                 offset    = {{12{instruction[31]}}, instruction[31], instruction[19:12], instruction[20], instruction[30:21],1'b0};
-                immediate = 'd0;
+                immediate = 32'd0;
             end
             `I_LUI, `I_AUIPC: begin
-                rs1       = 'd0;
-                rs2       = 'd0;
+                rs1       = 5'd0;
+                rs2       = 5'd0;
                 rd        = instruction[11:7];
-                offset    = 'd0;
+                offset    = 32'd0;
                 immediate = instruction[31:12] << 12;
             end
             `I_ERR: begin
-                rs1       = 'd0;
-                rs2       = 'd0;
-                rd        = 'd0;
-                offset    = 'd0;
-                immediate = 'd0;
+                rs1       = 5'd0;
+                rs2       = 5'd0;
+                rd        = 5'd0;
+                offset    = 32'd0;
+                immediate = 32'd0;
             end
             default: begin
-                rs1       = 'd0;
-                rs2       = 'd0;
-                rd        = 'd0;
-                offset    = 'd0;
-                immediate = 'd0;
+                rs1       = 5'd0;
+                rs2       = 5'd0;
+                rd        = 5'd0;
+                offset    = 32'd0;
+                immediate = 32'd0;
             end
         endcase
     end
