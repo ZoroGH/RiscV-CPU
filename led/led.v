@@ -14,7 +14,12 @@ module led(
             4'b0111: segs = 8'b11100000;
             4'b1000: segs = 8'b11111110;
             4'b1001: segs = 8'b11110110;
-            default: segs = 8'b11111111;
+            4'b1010: segs = 8'b11101110;
+            4'b1011: segs = 8'b00111110;
+            4'b1100: segs = 8'b10011100;
+            4'b1101: segs = 8'b01111010;
+            4'b1110: segs = 8'b10011110;
+            4'b1111: segs = 8'b10001110;
         endcase
     end
 endmodule
