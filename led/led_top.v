@@ -1,7 +1,7 @@
 module led_top(
     input clk,
     input rst,
-    input [31:0] digits,      // 8 decimal digits to display, coded in BCD
+    input [31:0] digits,      // 8 hex digits to display
     output wire [7:0] led0_segs,     // 7 segs and dp
     output reg [3:0] led0_en,       // the led to light
     output wire [7:0] led1_segs,
