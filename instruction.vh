@@ -17,3 +17,4 @@
 `define I_AUIPC 5'd17
 `define I_ERR  5'd31
 `define I_NULL 5'd0
+`define I_NOP 32'b00000000000000000000000000010011
