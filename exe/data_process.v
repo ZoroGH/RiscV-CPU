@@ -8,6 +8,7 @@ module data_process(
     input [31:0] data2,
     input [31:0] immediate,
     input [31:0] offset,
+    input [31:0] ins_addr,
 
     output reg write_reg,
     output reg load_en,
@@ -22,15 +23,15 @@ module data_process(
     reg [31:0] A;
     reg [31:0] B;
     reg [2:0] opcode;
-    reg [31:0] result;
-    reg SF,
-    reg ZF
+    wire [31:0] result;
+    wire SF;
+    wire ZF;
 
     alu alu(
         .A(A),
         .B(B),
         .opcode(opcode),
-        .result(result),
+        .result(res),
         .SF(SF),
         .ZF(ZF)   
     );
@@ -129,14 +130,14 @@ module data_process(
             end
             `I_JAL: begin
                 opcode = 'd0;
-                A      = offset;
+                A      = ins_addr;
                 B      = 32'd0;
                 write_reg = 1'd0;
                 load_en = 1'd0;
                 store_en = 1'd0;
-                jmp_en = 1'd0;
-                jmp_addr = 32'd0;
-                clr = 1'd0;
+                jmp_en = 1'd1;
+                jmp_addr = offset;
+                clr = 1'd1;
             end
             `I_ADDI: begin
                 opcode = 'd0;

@@ -1,12 +1,10 @@
-`timescale 1ns / 1ps
-
 module alu (
     input      [31:0] A,
     input      [31:0] B,
     input      [ 2:0] opcode,
     output reg [31:0] result,
-    output reg SF,
-    output reg ZF
+    output SF,
+    output ZF
 );
     wire [63:0] multip_res;
     assign multip_res = {{32{A[31]}},A} * {{32{B[31]}},B};   

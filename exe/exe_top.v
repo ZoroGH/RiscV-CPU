@@ -45,25 +45,6 @@ module exe_top(
         .rd2 (data2)
     );
 
-    exe exe_inst(
-        .clk (clk),
-        .optype(optype),
-        .data1(data1),
-        .data2(data2),
-        .immediate(immediate),
-        .offset(offset),
-
-        .write_reg (write_reg),
-        .load_en(load_en),
-        .store_en(store_en),
-        .addr(mem_addr),
-        .data(data),
-
-        .jmp_en(jmp_en),
-        .jmp_addr(jmp_addr),
-
-        .res(res),
-        .clr(clr)
-    );
+    
 
 endmodule
