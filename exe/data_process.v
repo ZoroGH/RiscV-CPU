@@ -14,11 +14,11 @@ module data_process(
     output reg load_en,
     output reg store_en,
 
-    output jmp_en,
-    output [31:0] jmp_addr,
+    output reg jmp_en,
+    output reg [31:0] jmp_addr,
 
-    output res,
-    output clr
+    output reg [31:0] res,
+    output reg clr
 );
     reg [31:0] A;
     reg [31:0] B;
@@ -161,7 +161,7 @@ module data_process(
                 jmp_addr = 32'd0;
                 clr = 1'd0;
             end
-            `I_SUB begin
+            `I_SUB: begin
                 opcode = 'd1;
                 A      = data1;
                 B      = data2;
@@ -172,7 +172,7 @@ module data_process(
                 jmp_addr = 32'd0;
                 clr = 1'd0;
             end
-            `I_MUL begin
+            `I_MUL: begin
                 opcode = 'd5;
                 A      = data1;
                 B      = data2;
@@ -183,7 +183,7 @@ module data_process(
                 jmp_addr = 32'd0;
                 clr = 1'd0;
             end
-            `I_MULH begin
+            `I_MULH: begin
                 opcode = 'd6;
                 A      = data1;
                 B      = data2; 
@@ -194,7 +194,7 @@ module data_process(
                 jmp_addr = 32'd0;
                 clr = 1'd0;
             end
-            `I_XOR begin
+            `I_XOR: begin
                 opcode = 'd4;
                 A      = data1;
                 B      = data2; 
@@ -205,7 +205,7 @@ module data_process(
                 jmp_addr = 32'd0;
                 clr = 1'd0;
             end
-            `I_AND begin
+            `I_AND: begin
                 opcode = 'd2;
                 A      = data1;
                 B      = data2; 
@@ -216,7 +216,7 @@ module data_process(
                 jmp_addr = 32'd0;
                 clr = 1'd0;
             end
-            `I_OR begin
+            `I_OR: begin
                 opcode = 'd3;
                 A      = data1;
                 B      = data2; 
@@ -227,7 +227,7 @@ module data_process(
                 jmp_addr = 32'd0;
                 clr = 1'd0;
             end
-            `I_LUI begin
+            `I_LUI: begin
                 opcode = 'd0;
                 A      = 32'd0;
                 B      = immediate; 
@@ -238,7 +238,7 @@ module data_process(
                 jmp_addr = 32'd0;
                 clr = 1'd0;
             end
-            `I_AUIPC begin
+            `I_AUIPC: begin
                 opcode = 'd0;
                 A      = 32'd0;
                 B      = immediate; 

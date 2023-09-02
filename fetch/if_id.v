@@ -11,11 +11,11 @@ module if_id(
 
     input wire hold_en, // 流水线暂停标志
 
-    output wire[31:0] ins_o,           // 指令内容
-    output wire[31:0] ins_addr_o   // 指令地址
+    output wire [31:0] ins_o,           // 指令内容
+    output wire [31:0] ins_addr_o   // 指令地址
     );
 
-    wire [31:0] tmp_ins;
+    reg [31:0] tmp_ins;
     always @ (posedge clk) begin
         if(!rst | hold_en) begin
             tmp_ins <= `I_NOP;
@@ -25,7 +25,7 @@ module if_id(
     end
     assign ins_o = tmp_ins;
 
-    wire [31:0] tmp_ins_addr;
+    reg [31:0] tmp_ins_addr;
     always @ (posedge clk) begin
         if(!rst | hold_en) begin
             tmp_ins_addr <= 32'd0;
