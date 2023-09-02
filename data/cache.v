@@ -3,7 +3,7 @@ module cache(
     input rst,
     input [31:0] i_addr, // pc >> 2
     input [31:0] d_addr, // unit is in 32bit aligned
-    output reg [31:0] i,
+    output reg [31:0] ins,
     input  we,
     input  [31:0] di,
     output reg [31:0] do
@@ -24,7 +24,7 @@ module cache(
     end
 
     always @(*) begin
-        i = mem[i_addr];
+        ins = mem[i_addr];
         do = mem[d_addr];
     end
 

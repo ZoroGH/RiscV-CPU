@@ -69,7 +69,7 @@ module cpu_top(
         .rst (rst),
         .i_addr (ins_addr),
         .d_addr (mem_addr),
-        .i (ins),
+        .ins (ins),
         .we (store_en),
         .di (mem_data),
         .do (do)
