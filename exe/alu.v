@@ -4,7 +4,9 @@ module alu (
     input      [31:0] A,
     input      [31:0] B,
     input      [ 2:0] opcode,
-    output reg [31:0] result
+    output reg [31:0] result,
+    output reg SF,
+    output reg ZF
 );
     wire [63:0] multip_res;
     assign multip_res = {{32{A[31]}},A} * {{32{B[31]}},B};   
@@ -20,6 +22,9 @@ module alu (
             default: result = 32'd0;
         endcase
     end
+
+    assign SF = result[31];
+    assign ZF = (result == 32'd0);
 
     // for debug
     reg [127:0] opcode_ascii;
