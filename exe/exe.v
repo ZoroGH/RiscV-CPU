@@ -17,7 +17,7 @@ module exe(
     output reg jmp_en,
     output reg [31:0] jmp_addr,
 
-    output reg [31:0] res,             // 对于write_reg为1时，此处为要写入寄存器的值
+    output reg [31:0] res,      // 对于write_reg为1时，此处为要写入寄存器的值
     output reg clr
 );
 
@@ -43,7 +43,7 @@ module exe(
         res <= res_d0;
         clr <= clr_d0;
     end
-    
+
     data_process data_process_inst(
         .optype (optype),
         .data1  (data1),
