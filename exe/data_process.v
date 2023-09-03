@@ -31,12 +31,13 @@ module data_process(
         .A(A),
         .B(B),
         .opcode(opcode),
-        .result(res),
+        .result(result),
         .SF(SF),
         .ZF(ZF)   
     );
 
     always @(*) begin
+        res = result;
         case (optype)
             `I_BEQ: begin
                 opcode = 3'd1;
