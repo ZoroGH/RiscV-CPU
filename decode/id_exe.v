@@ -1,94 +1,50 @@
 `include "instruction.vh"
 
-module id_exe(
-    input wire clk,
-    input wire rst,
-
-    input [31:0] ins_i,       // 指令内容
-    input [31:0] ins_addr_i,  // 指令地址
-
-    input [4:0] op_type_i,
-    input [4:0] rs1,
-    input [4:0] rs2,
-    input [4:0] rd,
-    input [31:0] offset_i,
-    input [31:0] immediate_i,
-
-    input hold_en,           // 流水线暂停标志
-
-    output [31:0] ins_addr_o, // 指令地址
-
-    output [4:0] op_type_o,
-    output [31:0] data1,
-    output [31:0] data2,
-    output [31:0] offset_o,
-    output [31:0] immediate_o,
+module id_exe (
+    input clk,
+    input rst,
+    input hold,
+    input wire [4:0] op_type,  // this is a rearrange of op, only for this file.
+    input wire [4:0] rs1,
+    input wire [4:0] rs2,
+    input wire [4:0] rd,
+    input wire [31:0] offset,
+    input wire [31:0] immediate,
+    //output
+    output reg [4:0] op_type_d1,
+    output reg [4:0] rs1_d1,
+    output reg [4:0] rs2_d1,
+    output reg [4:0] rd_d1,
+    output reg [31:0] offset_d1,
+    output reg [31:0] immediate_d1
 );
 
-    wire [5:0] op_type = op_type_i;
-    op_type_o = op_type;
 
-
-    wire [31:0] tmp_ins_addr;
-    always @ (posedge clk) begin
-        if(!rst | hold_en) begin
-            tmp_ins_addr <= 32'd0;
+    // delay for all param
+    always @(posedge clk) begin
+        if (rst || hold) begin
+            op_type_d1 <= 5'd0;
+            rs1_d1 <= 5'd0;
+            rs2_d1 <= 5'd0;
+            rd_d1 <= 5'd0;
+            offset_d1 <= 32'd0;
+            immediate_d1 <= 32'd0;
+            // end else if (hold) begin
+            //     //TODO: not sure
+            //     op_type_d1 <= op_type_d1;
+            //     rs1_d1 <= rs1_d1;
+            //     rs2_d1 <= rs2_d1;
+            //     rd_d1 <= rd_d1;
+            //     offset_d1 <= offset_d1;
+            //     immediate_d1 <= immediate_d1;
         end else begin
-            tmp_ins_addr <= ins_addr_i;
+            op_type_d1 <= op_type;
+            rs1_d1 <= rs1;
+            rs2_d1 <= rs2;
+            rd_d1 <= rd;
+            offset_d1 <= offset;
+            immediate_d1 <= immediate;
         end
     end
-    assign ins_addr_o = tmp_ins_addr;
-
-    wire [4:0] tmp_rs1;
-    always @ (posedge clk) begin
-        if(!rst | hold_en) begin
-            tmp_rs1 <= 5'd0;
-        end else begin
-            tmp_rs1 <= rs1;
-        end
-    end
-    assign rs1 = tmp_rs1;
-
-    wire [4:0] tmp_rs2;
-    always @ (posedge clk) begin
-        if(!rst | hold_en) begin
-            tmp_rs2 <= 5'd0;
-        end else begin
-            tmp_rs2 <= rs2;
-        end
-    end
-    assign rs2 = tmp_rs2;
-
-    wire [4:0] tmp_rd;
-    always @ (posedge clk) begin
-        if(!rst | hold_en) begin
-            tmp_rd <= 5'd0;
-        end else begin
-            tmp_rd <= rd;
-        end
-    end
-    assign rd = tmp_rd;
-
-    wire [31:0] tmp_offset;
-    always @ (posedge clk) begin
-        if(!rst | hold_en) begin
-            tmp_offset <= 32'd0;
-        end else begin
-            tmp_offset <= offset_i;
-        end
-    end
-    assign offset_o = tmp_offset;
-
-    wire [31:0] tmp_immediate;
-    always @ (posedge clk) begin
-        if(!rst | hold_en) begin
-            tmp_immediate <= 32'd0;
-        end else begin
-            tmp_immediate <= immediate_i;
-        end
-    end
-    assign immediate_o = tmp_ins_addr;
-
-
 
 endmodule

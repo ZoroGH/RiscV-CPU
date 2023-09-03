@@ -1,98 +1,110 @@
 `timescale 1ns / 1ns
 `include "instruction.vh"
 
-module CPU_Top(
+module CPU_Top (
     input clk,
     input rst
 );
-wire clk;     
-wire rst;     
-wire clr;     
-wire jmp_en;  
-wire hold_en; 
-wire [31:0] jmp_addr;
-wire [31:0] ins;    
+    wire clr;
+    wire jmp_en;
+    wire hold;
+    wire [31:0] jmp_addr;
+    wire [31:0] ins;
+    wire [6 : 0] op;
+    wire [4:0] op_type;
+    wire [4:0] rs1;
+    wire [4:0] rs2;
+    wire [4:0] rd;
+    wire [31:0] offset;
+    wire [31:0] immediate;
+    wire [31:0] ins_i;
+    wire [31:0] offset_i;
+    wire [31:0] immediate_i;
+    wire [31:0] ins_addr_o;
+    wire [4:0] op_type_o;
+    wire [31:0] data1;
+    wire [31:0] data2;
+    wire [31:0] offset_o;
+    wire [31:0] immediate_o;
+    wire write_reg_flag;
+    wire [31:0] res;
+    wire [4:0] op_type_d1;
+    wire [4:0] rs1_d1;
+    wire [4:0] rs2_d1;
+    wire [4:0] rd_d1;
+    wire [4:0] rd_d2;
+    wire [31:0] offset_d1;
+    wire [31:0] immediate_d1;
 
-wire [6 :0] op;
-wire [ 4:0] op_type;
-wire [ 4:0] rs1;
-wire [ 4:0] rs2;
-wire [ 4:0] rd;
-wire [31:0] offset;
-wire [31:0] immediate;
 
+    fetch u_fetch (
+        .clk     (clk),
+        .rst     (rst),
+        .clr     (clr),
+        .jmp_en  (jmp_en),
+        .hold    (hold),
+        .jmp_addr(jmp_addr),
+        .ins     (ins)
+    );
 
-fetch u_fetch(
-    .clk      ( clk      ),
-    .rst      ( rst      ),
-    .clr      ( clr      ),
-    .jmp_en   ( jmp_en   ),
-    .hold_en  ( hold_en  ),
-    .jmp_addr ( jmp_addr ),
-    .ins      ( ins      )
-);
+    decoder u_decoder (
+        .clk      (clk),
+        .rst      (rst),
+        .hold     (hold),
+        .ins      (ins),
+        .op_type  (op_type),
+        .rs1      (rs1),
+        .rs2      (rs2),
+        .rd       (rd),
+        .offset   (offset),
+        .immediate(immediate)
+    );
 
+    id_exe u_id_exe (
+        .clk         (clk),
+        .rst         (rst),
+        .hold        (hold),
+        .op_type     (op_type),
+        .rs1         (rs1),
+        .rs2         (rs2),
+        .rd          (rd),
+        .offset      (offset),
+        .immediate   (immediate),
+        .op_type_d1  (op_type_d1),
+        .rs1_d1      (rs1_d1),
+        .rs2_d1      (rs2_d1),
+        .rd_d1       (rd_d1),
+        .offset_d1   (offset_d1),
+        .immediate_d1(immediate_d1)
+    );
 
-decoder u_decoder(
-    .instruction ( ins ),
-    .op          ( op          ),
-    .op_type     ( op_type     ),
-    .rs1         ( rs1         ),
-    .rs2         ( rs2         ),
-    .rd          ( rd          ),
-    .offset      ( offset      ),
-    .immediate   ( immediate   )
-);
+    exe u_exe (
+        .clk           (clk),
+        .rst           (rst),
+        .optype        (op_type_d1),
+        .data1         (data1),
+        .data2         (data2),
+        .rd            (rd_d1),
+        .immediate     (immediate_d1),
+        .offset        (offset_d1),
+        .jmp_en        (jmp_en),
+        .jmp_addr      (jmp_addr),
+        .write_reg_flag(write_reg_flag),
+        .res           (res),
+        .clr           (hold),
+        .rd_d1         (rd_d2)
+    );
 
-wire [ 4:0] op_type_o;
-wire [31:0] data1;
-wire [31:0] data2;
-wire [31:0] offset_o;
-wire [31:0] immediate_o;
-
-id_exe u_id_exe(
-    .clk        ( clk       ),
-    .rst        ( rst       ),
-    .ins_i      ( ins       ),
-    .ins_addr_i  (0         ),
-    .op_type_i  ( op_type   ),
-    .rs1        ( rs1       ),
-    .rs2        ( rs2       ),
-    .rd         ( rd        ),
-    .offset_i   ( offset    ),
-    .immediate_i( immediate ),
-    .hold_en    ( hold_en   ),
-    .ins_addr_o ( 0         ),
-    .op_type_o  ( op_type_o ),
-    .data1      ( data1     ),
-    .data2      ( data2     ),
-    .offset_o   ( offset_o  ),
-    .immediate_o( immediate_o )
-);
-
-wire write_reg;
-wire load_en;
-wire store_en;
-wire [31:0] mem_addr;
-wire [31:0] mem_data;
-wire jmp_en;
-wire jmp_addr;
-wire [31:0] res;
-
-exe u_exe(
-    .clk        ( clk       ),
-    .rst        ( rst       ),
-    .op_type    ( op_type_o ),
-    .data1      ( data1     ),
-    .data2      ( data2     ),
-    .offset     ( offset_o  ),
-    .immediate  ( immediate_o),
-    .ins_addr   ( 0         ),
-    .write_reg  ( write_reg ),
-    .jmp_en     ( jmp_en    ),
-    .jmp_addr   ( jmp_addr  ),
-    .res        ( res       ),
-    .clr        ( hold_en   )
-);
+    reg_file u_reg_file (
+        .clk     (clk),
+        .rst     (rst),
+        .write_en(write_reg_flag),
+        .ra1     (rs1_d1),
+        .ra2     (rs2_d1),
+        .wa      (rd_d2),
+        .wd      (res),
+        .rd1     (data1),
+        .rd2     (data2)
+    );
 
 endmodule

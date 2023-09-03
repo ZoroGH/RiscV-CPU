@@ -1,10 +1,10 @@
-module i_cache(
+module i_cache (
     input clk,
     input rst,
-    input [31:0] i_addr, // pc >> 2
+    input [31:0] i_addr,  // pc >> 2
     output reg [31:0] ins
 );
-    reg [31:0] mem [511:0];
+    reg [31:0] mem[511:0];
 
     always @(*) begin
         ins = mem[i_addr];
@@ -21,7 +21,9 @@ module i_cache(
         // #10
         @(negedge rst)
         // #1   
-        $readmemb("C:/Users/CAFISK/Desktop/RiscV-CPU-lbw/RiscV-CPU-main/data/cache.bin",mem);
+        $readmemb(
+            "C:/Users/CAFISK/Desktop/RiscV-CPU-lbw/RiscV-CPU-main/data/cache.bin", mem
+        );
     end
 
 endmodule

@@ -1,16 +1,16 @@
 module reg_file (
     input             clk,
     input             rst,
-    input             write_en, // write enbale
-    input      [ 4:0] ra1,      // read index 1
-    input      [ 4:0] ra2,      // read index 2
-    input      [ 4:0] wa,       // write index
-    input      [31:0] wd,       // write data
-    output reg [31:0] rd1,      // read data 1
-    output reg [31:0] rd2,      // read data 2
+    input             write_en,  // write enbale
+    input      [ 4:0] ra1,       // read index 1
+    input      [ 4:0] ra2,       // read index 2
+    input      [ 4:0] wa,        // write index
+    input      [31:0] wd,        // write data
+    output reg [31:0] rd1,       // read data 1
+    output reg [31:0] rd2        // read data 2
 );
 
-    reg     [31:0] r [31:0];  // reg array
+    reg [31:0] r[31:0];  // reg array
 
     //read     
     always @(*) begin

@@ -1,4 +1,4 @@
-module d_cache(
+module d_cache (
     input clk,
     input rst,
     input [31:0] addr,
@@ -6,22 +6,26 @@ module d_cache(
     input [31:0] data_in,
     output reg [31:0] data_out
 );
-    reg [31:0] mem [511:0];
-    
+    reg [31:0] mem[511:0];
+
     // write
     integer j;
-    always @ (posedge clk or posedge rst) begin
-        if(rst) begin
-            for(j =0; j<512;j=j+1) mem[j] <= 32'd0;             
-        end
-        else if(write_en) begin
-        // if(we) begin
+    always @(posedge clk or posedge rst) begin
+        if (rst) begin
+            for (j = 0; j < 512; j = j + 1) mem[j] <= 32'd0;
+        end else if (write_en) begin
+            // if(we) begin
             mem[addr] <= data_in;
         end
     end
 
     always @(*) begin
         data_out = mem[addr];
+    end
+
+    initial begin
+        // #10
+        #8 $readmemb("C:/Users/CAFISK/Desktop/RiscV-CPU-lbw/RiscV-CPU-main/data/cache.bin", mem);
     end
 
 endmodule

@@ -2,22 +2,20 @@
     an encapsulated ALU
     the first cycle, get res, write_reg, load_en, store_en, jmp+en, jmp_addr
 */
-module data_process(
-    input [4:0]  optype,
-    input [31:0] data1,
-    input [31:0] data2,
-    input [31:0] immediate,
-    input [31:0] offset,
-    input [31:0] ins_addr,
-
+`include "instruction.vh"
+module data_process (
+    input wire [4:0] optype,
+    input wire [31:0] data1,
+    input wire [31:0] data2,
+    input wire [31:0] immediate,
+    input wire [31:0] offset,
+    input wire [31:0] ins_addr,
     output reg write_reg,
     output reg load_en,
     output reg store_en,
-    output [31:0] write_mem_data,
-
+    output wire [31:0] write_mem_data,
     output reg jmp_en,
     output reg [31:0] jmp_addr,
-
     output reg [31:0] res,
     output reg clr
 );
@@ -28,13 +26,13 @@ module data_process(
     wire SF;
     wire ZF;
 
-    alu alu(
+    alu alu (
         .A(A),
         .B(B),
         .opcode(opcode),
         .result(result),
         .SF(SF),
-        .ZF(ZF)   
+        .ZF(ZF)
     );
 
     assign write_mem_data = data2;
@@ -43,13 +41,13 @@ module data_process(
         res = result;
         case (optype)
             `I_BEQ: begin
-                opcode = 3'd1;
-                A      = data1;
-                B      = data2;
+                opcode    = 3'd1;
+                A         = data1;
+                B         = data2;
                 write_reg = 1'd0;
-                load_en = 1'd0;
-                store_en = 1'd0;
-                if(ZF == 1) begin
+                load_en   = 1'd0;
+                store_en  = 1'd0;
+                if (ZF == 1) begin
                     jmp_en = 1'd1;
                     jmp_addr = offset;
                     clr = 1'd1;
@@ -60,13 +58,13 @@ module data_process(
                 end
             end
             `I_BNE: begin
-                opcode = 3'd1;
-                A      = data1;
-                B      = data2;
+                opcode    = 3'd1;
+                A         = data1;
+                B         = data2;
                 write_reg = 1'd0;
-                load_en = 1'd0;
-                store_en = 1'd0;
-                if(ZF == 0) begin
+                load_en   = 1'd0;
+                store_en  = 1'd0;
+                if (ZF == 0) begin
                     jmp_en = 1'd1;
                     jmp_addr = offset;
                     clr = 1'd1;
@@ -77,13 +75,13 @@ module data_process(
                 end
             end
             `I_BLT: begin
-                opcode = 3'd1;
-                A      = data1;
-                B      = data2;
+                opcode    = 3'd1;
+                A         = data1;
+                B         = data2;
                 write_reg = 1'd0;
-                load_en = 1'd0;
-                store_en = 1'd0;
-                if(SF == 1) begin
+                load_en   = 1'd0;
+                store_en  = 1'd0;
+                if (SF == 1) begin
                     jmp_en = 1'd1;
                     jmp_addr = offset;
                     clr = 1'd1;
@@ -94,13 +92,13 @@ module data_process(
                 end
             end
             `I_BGE: begin
-                opcode = 3'd1;
-                A      = data1;
-                B      = data2;
+                opcode    = 3'd1;
+                A         = data1;
+                B         = data2;
                 write_reg = 1'd0;
-                load_en = 1'd0;
-                store_en = 1'd0;
-                if(SF == 1) begin
+                load_en   = 1'd0;
+                store_en  = 1'd0;
+                if (SF == 1) begin
                     jmp_en = 1'd0;
                     jmp_addr = 32'd0;
                     clr = 1'd0;
@@ -111,158 +109,158 @@ module data_process(
                 end
             end
             `I_LW: begin
-                opcode = 'd0;
-                A      = data1;
-                B      = offset;
+                opcode    = 3'd0;
+                A         = data1;
+                B         = offset;
                 write_reg = 1'd1;
-                load_en = 1'd1;
-                store_en = 1'd0;
-                jmp_en = 1'd0;
-                jmp_addr = 32'd0;
-                clr = 1'd0;
+                load_en   = 1'd1;
+                store_en  = 1'd0;
+                jmp_en    = 1'd0;
+                jmp_addr  = 32'd0;
+                clr       = 1'd0;
             end
             `I_SW: begin
-                opcode = 'd0;
-                A      = data2;
-                B      = offset;
+                opcode    = 3'd0;
+                A         = data2;
+                B         = offset;
                 write_reg = 1'd0;
-                load_en = 1'd0;
-                store_en = 1'd1;
-                jmp_en = 1'd0;
-                jmp_addr = 32'd0;
-                clr = 1'd0;
+                load_en   = 1'd0;
+                store_en  = 1'd1;
+                jmp_en    = 1'd0;
+                jmp_addr  = 32'd0;
+                clr       = 1'd0;
             end
             `I_JAL: begin
-                opcode = 'd0;
-                A      = ins_addr;
-                B      = 32'd0;
+                opcode    = 3'd0;
+                A         = ins_addr;
+                B         = 32'd0;
                 write_reg = 1'd0;
-                load_en = 1'd0;
-                store_en = 1'd0;
-                jmp_en = 1'd1;
-                jmp_addr = offset;
-                clr = 1'd1;
+                load_en   = 1'd0;
+                store_en  = 1'd0;
+                jmp_en    = 1'd1;
+                jmp_addr  = offset;
+                clr       = 1'd1;
             end
             `I_ADDI: begin
-                opcode = 'd0;
-                A      = data1;
-                B      = immediate;
-                write_reg = 'd1;
-                load_en = 'd0;
-                store_en = 'd0;
-                jmp_en = 1'd0;
-                jmp_addr = 32'd0;
-                clr = 1'd0;
+                opcode    = 3'd0;
+                A         = data1;
+                B         = immediate;
+                write_reg = 1'd1;
+                load_en   = 1'd0;
+                store_en  = 1'd0;
+                jmp_en    = 1'd0;
+                jmp_addr  = 32'd0;
+                clr       = 1'd0;
             end
             `I_ADD: begin
-                opcode = 'd0;
-                A      = data1;
-                B      = data2;
+                opcode    = 3'd0;
+                A         = data1;
+                B         = data2;
                 write_reg = 1'd1;
-                load_en = 1'd0;
-                store_en = 1'd0;
-                jmp_en = 1'd0;
-                jmp_addr = 32'd0;
-                clr = 1'd0;
+                load_en   = 1'd0;
+                store_en  = 1'd0;
+                jmp_en    = 1'd0;
+                jmp_addr  = 32'd0;
+                clr       = 1'd0;
             end
             `I_SUB: begin
-                opcode = 'd1;
-                A      = data1;
-                B      = data2;
+                opcode    = 3'd1;
+                A         = data1;
+                B         = data2;
                 write_reg = 1'd1;
-                load_en = 1'd0;
-                store_en = 1'd0;
-                jmp_en = 1'd0;
-                jmp_addr = 32'd0;
-                clr = 1'd0;
+                load_en   = 1'd0;
+                store_en  = 1'd0;
+                jmp_en    = 1'd0;
+                jmp_addr  = 32'd0;
+                clr       = 1'd0;
             end
             `I_MUL: begin
-                opcode = 'd5;
-                A      = data1;
-                B      = data2;
+                opcode    = 3'd5;
+                A         = data1;
+                B         = data2;
                 write_reg = 1'd1;
-                load_en = 1'd0;
-                store_en = 1'd0;
-                jmp_en = 1'd0;
-                jmp_addr = 32'd0;
-                clr = 1'd0;
+                load_en   = 1'd0;
+                store_en  = 1'd0;
+                jmp_en    = 1'd0;
+                jmp_addr  = 32'd0;
+                clr       = 1'd0;
             end
             `I_MULH: begin
-                opcode = 'd6;
-                A      = data1;
-                B      = data2; 
+                opcode    = 3'd6;
+                A         = data1;
+                B         = data2;
                 write_reg = 1'd1;
-                load_en = 1'd0;
-                store_en = 1'd0;
-                jmp_en = 1'd0;
-                jmp_addr = 32'd0;
-                clr = 1'd0;
+                load_en   = 1'd0;
+                store_en  = 1'd0;
+                jmp_en    = 1'd0;
+                jmp_addr  = 32'd0;
+                clr       = 1'd0;
             end
             `I_XOR: begin
-                opcode = 'd4;
-                A      = data1;
-                B      = data2; 
+                opcode    = 3'd4;
+                A         = data1;
+                B         = data2;
                 write_reg = 1'd1;
-                load_en = 1'd0;
-                store_en = 1'd0;
-                jmp_en = 1'd0;
-                jmp_addr = 32'd0;
-                clr = 1'd0;
+                load_en   = 1'd0;
+                store_en  = 1'd0;
+                jmp_en    = 1'd0;
+                jmp_addr  = 32'd0;
+                clr       = 1'd0;
             end
             `I_AND: begin
-                opcode = 'd2;
-                A      = data1;
-                B      = data2; 
+                opcode    = 3'd2;
+                A         = data1;
+                B         = data2;
                 write_reg = 1'd1;
-                load_en = 1'd0;
-                store_en = 1'd0;
-                jmp_en = 1'd0;
-                jmp_addr = 32'd0;
-                clr = 1'd0;
+                load_en   = 1'd0;
+                store_en  = 1'd0;
+                jmp_en    = 1'd0;
+                jmp_addr  = 32'd0;
+                clr       = 1'd0;
             end
             `I_OR: begin
-                opcode = 'd3;
-                A      = data1;
-                B      = data2; 
+                opcode    = 3'd3;
+                A         = data1;
+                B         = data2;
                 write_reg = 1'd1;
-                load_en = 1'd0;
-                store_en = 1'd0;
-                jmp_en = 1'd0;
-                jmp_addr = 32'd0;
-                clr = 1'd0;
+                load_en   = 1'd0;
+                store_en  = 1'd0;
+                jmp_en    = 1'd0;
+                jmp_addr  = 32'd0;
+                clr       = 1'd0;
             end
             `I_LUI: begin
-                opcode = 'd0;
-                A      = 32'd0;
-                B      = immediate; 
+                opcode    = 3'd0;
+                A         = 32'd0;
+                B         = immediate;
                 write_reg = 1'd1;
-                load_en = 1'd0;
-                store_en = 1'd0;
-                jmp_en = 1'd0;
-                jmp_addr = 32'd0;
-                clr = 1'd0;
+                load_en   = 1'd0;
+                store_en  = 1'd0;
+                jmp_en    = 1'd0;
+                jmp_addr  = 32'd0;
+                clr       = 1'd0;
             end
             `I_AUIPC: begin
-                opcode = 'd0;
-                A      = 32'd0;
-                B      = immediate; 
+                opcode    = 3'd0;
+                A         = 32'd0;
+                B         = immediate;
                 write_reg = 1'd1;
-                load_en = 1'd0;
-                store_en = 1'd0;
-                jmp_en = 1'd0;
-                jmp_addr = 32'd0;
-                clr = 1'd0;
+                load_en   = 1'd0;
+                store_en  = 1'd0;
+                jmp_en    = 1'd0;
+                jmp_addr  = 32'd0;
+                clr       = 1'd0;
             end
             default: begin
-                opcode = 'd9;
-                A      = 'd0;
-                B      = 'd0;
+                opcode    = 3'd0;
+                A         = 32'd0;
+                B         = 32'd0;
                 write_reg = 1'd0;
-                load_en = 1'd0;
-                store_en = 1'd0;
-                jmp_en = 1'd0;
-                jmp_addr = 32'd0;
-                clr = 1'd0;
+                load_en   = 1'd0;
+                store_en  = 1'd0;
+                jmp_en    = 1'd0;
+                jmp_addr  = 32'd0;
+                clr       = 1'd0;
             end
         endcase
     end
