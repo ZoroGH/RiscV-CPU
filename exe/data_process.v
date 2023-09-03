@@ -13,6 +13,7 @@ module data_process(
     output reg write_reg,
     output reg load_en,
     output reg store_en,
+    output [31:0] write_mem_data,
 
     output reg jmp_en,
     output reg [31:0] jmp_addr,
@@ -35,6 +36,8 @@ module data_process(
         .SF(SF),
         .ZF(ZF)   
     );
+
+    assign write_mem_data = data2;
 
     always @(*) begin
         res = result;

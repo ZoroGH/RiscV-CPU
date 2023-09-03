@@ -17,13 +17,17 @@ module exe(
 );
 
     wire write_reg_d0;
-    wire load_en;
-    wire store_en;
     wire jmp_en_d0;
     wire [31:0] jmp_addr_d0;
     wire [31:0] res_d0;
     wire clr_d0;
     wire [31:0] read_mem_data;
+    wire load_en_d0;
+    wire store_en_d0;
+    wire load_en_d1;
+    wire store_en_d1;
+    wire [31:0] store_data_d0;
+    reg [31:0] store_data_d1;
 
     // 延迟一拍
     always @(posedge clk) begin
@@ -31,11 +35,14 @@ module exe(
         jmp_en      <=  jmp_en_d0;
         jmp_addr    <=  jmp_addr_d0;
         clr         <=  clr_d0;
+        store_en_d1 <=  store_en_d0;
+        load_en_d1  <=  load_en_d0;
+        store_data_d1  <= store_data_d0;
     end
 
     always @(*) begin
-        if(load_en == 1)    res = read_mem_data;
-        else                res = res_d0;
+        if(load_en_d1 == 1)    res = read_mem_data;
+        else                   res = res_d0;
     end
 
     data_process data_process_inst(
@@ -46,8 +53,9 @@ module exe(
         .offset     ( offset      ),
         .ins_addr   ( ins_addr    ),
         .write_reg  ( write_reg_d0),
-        .load_en    ( load_en     ),
-        .store_en   ( store_en    ),
+        .load_en    ( load_en_d0  ),
+        .store_en   ( store_en_d0 ),
+        .write_mem_data ( store_data_d0 ),
         .jmp_en     ( jmp_en_d0   ),
         .jmp_addr   ( jmp_addr_d0 ),
         .res        ( res_d0      ),
@@ -55,12 +63,12 @@ module exe(
     );
 
     d_cache d_cache_inst(
-        .clk        ( clk       ),
-        .rst        ( rst       ),
-        .addr       ( res_d0    ),
-        .write_en   ( store_en  ),
-        .data_in    ( data1     ),
-        .data_out   ( read_mem_data)
+        .clk        ( clk           ),
+        .rst        ( rst           ),
+        .addr       ( res_d0        ),
+        .write_en   ( store_en_d1   ),
+        .data_in    ( store_data_d1 ),
+        .data_out   ( read_mem_data )
     );
 
 endmodule
