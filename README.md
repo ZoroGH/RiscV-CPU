@@ -56,34 +56,26 @@ output immediate
 
 Execute
 ```verilog
-input clk,
-input rst,
-input opcode,
-input rs1,
-input rs2,
-input rd,
-input offset,
-input immediate,
+    input clk,
+    input rst,
+    input [4:0] optype,
+    input [4:0] rs1,
+    input [4:0] rs2,
+    input [4:0] rd,
+    input [31:0] offset,
+    input [31:0] immediate,
 
-output read_en,
-output read_addr,
-input [31:0] read_data,
+    output [31:0] mem_addr,     // addr for load or store
+    input  [31:0] mem_data,     // data from mem(for load)
+    output [31:0] write_data,   // data to mem (for store)
+    output load_en,
+    output store_en,
 
-output write_addr,
-output write_en,// read or write
-output [31:0] write_data,
+    output jmp_en,
+    output jmp_addr,
 
-
-output [31:0] addr,
-input  [31:0] data,
-output [31:0] write_data,
-output write_read,
-
-output jmp_en,
-output jmp_addr,
-
-output res,// result
-output clr
+    output res,// result
+    output clr
 
 ```
 
