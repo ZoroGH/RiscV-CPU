@@ -12,15 +12,18 @@ module fetch (
 
     reg [31:0] addr;
     reg [31:0] addr_d1;
+    
+    wire [31:0] real_addr;
+    assign real_addr = ($signed(jmp_addr)) >>> 2;
 
     always @(posedge clk) begin
         if (rst || clr) begin
             addr <= `I_ONES;
-        end else if (jmp_en) begin
-            addr <= addr + jmp_addr;
         end else if (hold) begin
-            addr <= addr;
-        end else begin
+            addr <= addr + real_addr - 32'd2;
+        end else if (jmp_en) begin
+            addr <= addr + real_addr;
+        end  else begin
             addr <= addr + 32'd1;
         end
     end

@@ -121,7 +121,7 @@ module data_process (
             end
             `I_SW: begin
                 opcode    = 3'd0;
-                A         = data2;
+                A         = data1;
                 B         = offset;
                 write_reg = 1'd0;
                 load_en   = 1'd0;

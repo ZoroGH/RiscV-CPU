@@ -10,19 +10,19 @@ module i_cache (
         ins = mem[i_addr];
     end
 
-    // integer j;
-    // always @(posedge clk) begin
-    //     if( rst ) begin
-    //         for(j=0; j<512;j=j+1) mem[j] <= 32'd0;
-    //     end
-    // end
+     integer j;
+     always @(posedge clk) begin
+         if( rst ) begin
+             for(j=0; j<512;j=j+1) mem[j] <= 32'd0;
+         end
+     end
 
     initial begin
         // #10
-        @(negedge rst)
-        // #1   
+        //@(negedge rst)
+         #4   
         $readmemb(
-            "C:/Users/CAFISK/Desktop/RiscV-CPU-lbw/RiscV-CPU-main/data/cache.bin", mem
+            "C:/Users/12846/Desktop/RiscV-CPU/data/test1.txt", mem
         );
     end
 
